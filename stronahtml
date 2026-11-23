@@ -1,1 +1,226 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misja Ratunkowa</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b192c;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h1 {
+            margin: 10px 0;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+        #ui {
+            display: flex;
+            gap: 30px;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        canvas {
+            background: linear-gradient(180deg, #1e6091 0%, #168aad 100%);
+            border: 4px solid #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        #instructions {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #a9d6e5;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+        button:hover {
+            background-color: #ff4757;
+        }
+    </style>
+</head>
+<body>
 
+    <h1>🚤 Misja Ratunkowa</h1>
+    <div id="ui">
+        <div>Uratowani: <span id="score">0</span></div>
+        <div>Życia: <span id="lives">3</span></div>
+    </div>
+    <canvas id="gameCanvas" width="480" height="600"></canvas>
+    <div id="instructions">Sterowanie: Strzałki ⬅️ ➡️ lub klawisze A / D. Ratuj rozbitków (🟠), omijaj skały (🪨)!</div>
+    <button id="restartBtn" onclick="resetGame()">Zagraj ponownie</button>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const scoreEl = document.getElementById("score");
+        const livesEl = document.getElementById("lives");
+        const restartBtn = document.getElementById("restartBtn");
+
+        let score = 0;
+        let lives = 3;
+        let gameOver = false;
+        let frame = 0;
+
+        // Gracz (Łódź ratunkowa)
+        const boat = {
+            x: canvas.width / 2 - 20,
+            y: canvas.height - 80,
+            width: 40,
+            height: 60,
+            speed: 6,
+            dx: 0
+        };
+
+        let items = []; // Rozbitkowie i przeszkody
+
+        // Sterowanie
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") boat.dx = -boat.speed;
+            if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") boat.dx = boat.speed;
+        });
+
+        document.addEventListener("keyup", (e) => {
+            if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A" ||
+                e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+                boat.dx = 0;
+            }
+        });
+
+        function spawnItem() {
+            const isSurvivor = Math.random() > 0.35; // 65% szans na rozbitka, 35% na skałę
+            const size = isSurvivor ? 24 : 36;
+            items.push({
+                x: Math.random() * (canvas.width - size),
+                y: -size,
+                width: size,
+                height: size,
+                speed: 2.5 + Math.random() * 2 + (score * 0.05), // Przyspiesza z wynikiem
+                type: isSurvivor ? "survivor" : "rock"
+            });
+        }
+
+        function drawBoat() {
+            // Kadłub łodzi
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.moveTo(boat.x + boat.width / 2, boat.y);
+            ctx.lineTo(boat.x + boat.width, boat.y + 20);
+            ctx.lineTo(boat.x + boat.width - 5, boat.y + boat.height);
+            ctx.lineTo(boat.x + 5, boat.y + boat.height);
+            ctx.lineTo(boat.x, boat.y + 20);
+            ctx.closePath();
+            ctx.fill();
+
+            // Czerwony pasek ratunkowy
+            ctx.fillStyle = "#e63946";
+            ctx.fillRect(boat.x + 8, boat.y + 22, boat.width - 16, 25);
+        }
+
+        function drawItems() {
+            items.forEach(item => {
+                if (item.type === "survivor") {
+                    // Koło ratunkowe / rozbitek
+                    ctx.fillStyle = "#ff9f1c";
+                    ctx.beginPath();
+                    ctx.arc(item.x + item.width / 2, item.y + item.height / 2, item.width / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.beginPath();
+                    ctx.arc(item.x + item.width / 2, item.y + item.height / 2, item.width / 5, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Skała
+                    ctx.fillStyle = "#495057";
+                    ctx.beginPath();
+                    ctx.arc(item.x + item.width / 2, item.y + item.height / 2, item.width / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        function update() {
+            if (gameOver) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Ruch łodzi
+            boat.x += boat.dx;
+            if (boat.x < 0) boat.x = 0;
+            if (boat.x + boat.width > canvas.width) boat.x = canvas.width - boat.width;
+
+            // Generowanie obiektów
+            frame++;
+            if (frame % 45 === 0) {
+                spawnItem();
+            }
+
+            // Aktualizacja pozycji i kolizji
+            for (let i = items.length - 1; i >= 0; i--) {
+                let item = items[i];
+                item.y += item.speed;
+
+                // Sprawdzanie kolizji z łodzią
+                if (
+                    boat.x < item.x + item.width &&
+                    boat.x + boat.width > item.x &&
+                    boat.y < item.y + item.height &&
+                    boat.y + boat.height > item.y
+                ) {
+                    if (item.type === "survivor") {
+                        score++;
+                        scoreEl.innerText = score;
+                    } else {
+                        lives--;
+                        livesEl.innerText = lives;
+                    }
+                    items.splice(i, 1);
+                    continue;
+                }
+
+                // Obiekt wypłynął poza ekran
+                if (item.y > canvas.height) {
+                    if (item.type === "survivor") {
+                        lives--; // Utrata życia za nieuratowanie rozbitka
+                        livesEl.innerText = lives;
+                    }
+                    items.splice(i, 1);
+                }
+            }
+
+            drawBoat();
+            drawItems();
+
+            if (lives <= 0) {
+                endGame();
+            } else {
+                requestAnimationFrame(update);
+            }
+        }
+
+        function endGame() {
+            gameOver = true;
+            ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 36px Segoe UI";
+            ctx.textAlign = "center";
