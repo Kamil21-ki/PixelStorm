@@ -593,4 +593,15 @@ h1:hover, h2:hover {
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.3);
     transition: text-shadow 0.3s ease;
 }
+/* Efekt pływającego robota / elementu */
+@keyframes lewitacjaRobota {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(3deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
 
+.robot-animowany {
+    display: inline-block;
+    animation: lewitacjaRobota 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
+}
