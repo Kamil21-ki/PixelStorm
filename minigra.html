@@ -1,1 +1,239 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strefa Mega Gier – PixelStorm</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .arcade-box {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .arcade-screen {
+            background: #000;
+            border: 2px solid var(--accent-blue);
+            border-radius: 10px;
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .player-ship {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            transition: left 0.1s ease;
+        }
+        .obstacle {
+            position: absolute;
+            top: -30px;
+            font-size: 1.5rem;
+        }
+        .item-drop {
+            position: absolute;
+            top: -30px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
 
+    <!-- Poruszające się tło -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <nav>
+        <a href="index.html" class="logo">Nexus.AI</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Start</a></li>
+            <li><a href="co-robi-ai.html">Co robi AI?</a></li>
+            <li><a href="w-czym-pomaga.html">W czym pomaga?</a></li>
+            <li><a href="minigra.html" class="active">Mini-Gry</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="hero-center" style="padding-top: 1rem; padding-bottom: 1rem;">
+            <span class="badge">Arcade Zone</span>
+            <h1>Mega Strefa <span>Cyber-Gier</span></h1>
+            <p>Wybierz wyzwanie, pobij swój rekord i przetestuj swój refleks w świecie algorytmów!</p>
+        </div>
+
+        <div class="games-wrapper">
+            
+            <!-- GRA 1: WYŚCIGI HYPER-DRIVE -->
+            <div class="arcade-box">
+                <h3 style="color: var(--accent-blue);">🚀 Gra 1: Hyper-Drive Runner</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Używaj strzałek w lewo/prawo, aby omijać wirusy (⚠️)!</p>
+                
+                <div class="arcade-screen" id="arcade-screen-1" tabindex="0">
+                    <div id="player" class="player-ship">🚀</div>
+                    <div id="obst" class="obstacle" style="left: 50%;">⚠️</div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 0.5rem;">
+                    <button class="tab-btn" onclick="ruchLewo()">◀ W lewo</button>
+                    <button class="tab-btn" onclick="ruchPrawo()">W prawo ▶</button>
+                </div>
+                <button class="tab-btn" onclick="startWyscigu()" style="width: 100%; background: var(--accent-blue); color: #000;">START / RESET</button>
+                <p id="wynik-wyscigu" class="game-result" style="margin-top: 0.5rem;">Wynik: 0 pkt</p>
+            </div>
+
+            <!-- GRA 2: REAKTOR AI (KLIKER) -->
+            <div class="arcade-box">
+                <h3 style="color: var(--accent-purple);">💥 Gra 2: Przeciążenie Reaktorów</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Klikaj szalonego bota najszybciej jak potrafisz w 10 sekund!</p>
+                
+                <div class="arcade-screen" style="flex-direction: column; cursor: pointer;" onclick="klikReaktor()">
+                    <div id="reaktor-emoji" style="font-size: 3rem; transition: transform 0.1s;">🤖</div>
+                    <p id="reaktor-info" style="font-size: 0.9rem; color: var(--accent-purple); margin-top: 5px;">Kliknij, aby zacząć!</p>
+                </div>
+                
+                <button class="tab-btn" onclick="startKlikera()" style="width: 100%;">Zagraj (10s) ⏱️</button>
+                <p id="wynik-klikera" class="game-result" style="margin-top: 0.5rem;">Kliknięcia: 0</p>
+            </div>
+
+            <!-- GRA 3: ŁAPACZ KLUCZY KRYPTO -->
+            <div class="arcade-box">
+                <h3 style="color: var(--accent-sage);">💎 Gra 3: Łapacz Krypto-Kluczy</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Łap spadające klucze (🔑), unikaj błędów (❌)!</p>
+                
+                <div class="arcade-screen" id="arcade-screen-3">
+                    <div id="krypto-item" class="item-drop" style="left: 30%;">🔑</div>
+                    <div id="koszyk" style="position: absolute; bottom: 5px; left: 40%; font-size: 1.5rem; background: rgba(255,255,255,0.1); padding: 2px 15px; border-radius: 8px;">🧺</div>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 0.5rem;">
+                    <button class="tab-btn" onclick="koszykLewo()">◀</button>
+                    <button class="tab-btn" onclick="koszykPrawo()">▶</button>
+                </div>
+                <button class="tab-btn" onclick="startKrypto()" style="width: 100%; background: var(--accent-sage); color: #000;">START GRY</button>
+                <p id="wynik-krypto" class="game-result" style="margin-top: 0.5rem;">Klucze: 0 pkt</p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>Portal o Sztucznej Inteligencji • PixelStorm 2026</p>
+    </footer>
+
+    <script>
+        /* --- GRA 1: HYPER-DRIVE --- */
+        let playerX = 50;
+        let obstY = -30;
+        let obstX = 50;
+        let wyscigAktywny = false;
+        let punktyWyscigu = 0;
+        let timerWyscigu;
+
+        function ruchLewo() { if(wyscigAktywny && playerX > 15) { playerX -= 15; document.getElementById('player').style.left = playerX + '%'; } }
+        function ruchPrawo() { if(wyscigAktywny && playerX < 85) { playerX += 15; document.getElementById('player').style.left = playerX + '%'; } }
+
+        function startWyscigu() {
+            wyscigAktywny = true;
+            punktyWyscigu = 0;
+            obstY = -30;
+            obstX = Math.floor(Math.random() * 70) + 15;
+            document.getElementById('obst').style.left = obstX + '%';
+            
+            clearInterval(timerWyscigu);
+            timerWyscigu = setInterval(() => {
+                obstY += 4;
+                document.getElementById('obst').style.top = obstY + 'px';
+
+                // Kolizja
+                if (obstY > 120 && obstY < 160) {
+                    if (Math.abs(playerX - obstX) < 18) {
+                        wyscigAktywny = false;
+                        clearInterval(timerWyscigu);
+                        document.getElementById('wynik-wyscigu').innerHTML = `💥 Zderzenie! Wynik: ${punktyWyscigu} pkt`;
+                        document.getElementById('wynik-wyscigu').style.color = "#f87171";
+                        return;
+                    }
+                }
+
+                if (obstY > 180) {
+                    obstY = -30;
+                    obstX = Math.floor(Math.random() * 70) + 15;
+                    document.getElementById('obst').style.left = obstX + '%';
+                    punktyWyscigu += 10;
+                    document.getElementById('wynik-wyscigu').innerHTML = `Wynik: ${punktyWyscigu} pkt 🚀`;
+                    document.getElementById('wynik-wyscigu').style.color = "var(--accent-blue)";
+                }
+            }, 30);
+        }
+
+        /* --- GRA 2: KLIKER REAKTORA --- */
+        let klikniecia = 0;
+        let czasTrwa = false;
+
+        function startKlikera() {
+            if (czasTrwa) return;
+            klikniecia = 0;
+            czasTrwa = true;
+            document.getElementById('wynik-klikera').innerHTML = "Klikania: 0";
+            document.getElementById('reaktor-info').innerHTML = "KLIKAJ SZYBKO!";
+            
+            let timeLeft = 10;
+            let countdown = setInterval(() => {
+                timeLeft--;
+                document.getElementById('reaktor-info').innerHTML = `Czas: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    czasTrwa = false;
+                    document.getElementById('reaktor-info').innerHTML = `Koniec! Wynik: ${klikniecia} kliknięć!`;
+                }
+            }, 1000);
+        }
+
+        function klikReaktor() {
+            if (!czasTrwa) return;
+            klikniecia++;
+            document.getElementById('wynik-klikera').innerHTML = `Kliknięcia: ${klikniecia}`;
+            let bot = document.getElementById('reaktor-emoji');
+            bot.style.transform = "scale(1.2) rotate(10deg)";
+            setTimeout(() => bot.style.transform = "scale(1) rotate(0deg)", 100);
+        }
+
+        /* --- GRA 3: ŁAPACZ KRYPTO --- */
+        let kryptoX = 40;
+        let itemY = -30;
+        let itemX = 30;
+        let kryptoPunkty = 0;
+        let kryptoAktywne = false;
+        let timerKrypto;
+
+        function koszykLewo() { if(kryptoAktywne && kryptoX > 5) { kryptoX -= 10; document.getElementById('koszyk').style.left = kryptoX + '%'; } }
+        function koszykPrawo() { if(kryptoAktywne && kryptoX < 75) { kryptoX += 10; document.getElementById('koszyk').style.left = kryptoX + '%'; } }
+
+        function startKrypto() {
+            kryptoAktywne = true;
+            kryptoPunkty = 0;
+            itemY = -30;
+            itemX = Math.floor(Math.random() * 70) + 10;
+            document.getElementById('krypto-item').style.left = itemX + '%';
+
+            clearInterval(timerKrypto);
+            timerKrypto = setInterval(() => {
+                itemY += 5;
+                document.getElementById('krypto-item').style.top = itemY + 'px';
+
+                // Złapanie
+                if (itemY > 125 && itemY < 155) {
+                    if (Math.abs(kryptoX - (itemX - 10)) < 20) {
+                        kryptoPunkty++;
