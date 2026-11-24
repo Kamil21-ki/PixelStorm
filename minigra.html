@@ -3,83 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini-Gra AI – PixelStorm</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Interaktywna Gra AI – PixelStorm</title>
     <style>
-        .gra-kontener {
-            max-width: 600px;
-            margin: 2rem auto;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
+        body {
+            background-color: #0b0f19;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
             text-align: center;
-            backdrop-filter: blur(10px);
+            padding: 2rem;
+            margin: 0;
+        }
+        nav {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        nav a {
+            color: #38bdf8;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        .gra-box {
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid #38bdf8;
+            border-radius: 16px;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .przycisk-gry {
+            background: #38bdf8;
+            color: #0b0f19;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+        .przycisk-gry:hover {
+            background: #0ea5e9;
+            transform: scale(1.05);
         }
         .wynik {
-            font-size: 1.2rem;
-            margin-top: 1rem;
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            color: #4ade80;
             font-weight: bold;
-            color: var(--accent-blue);
+        }
+        #bot {
+            font-size: 4rem;
+            cursor: pointer;
+            user-select: none;
+            display: inline-block;
+            transition: transform 0.1s;
+            margin: 1rem 0;
+        }
+        #bot:active {
+            transform: scale(0.9);
         }
     </style>
 </head>
 <body>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-
     <nav>
-        <a href="index.html" class="logo">Nexus.AI</a>
-        <ul class="nav-links">
-            <li><a href="index.html">Start</a></li>
-            <li><a href="co-robi-ai.html">Co robi AI?</a></li>
-            <li><a href="w-czym-pomaga.html">W czym pomaga?</a></li>
-            <li><a href="minigra.html" class="active">Mini-Gra</a></li>
-        </ul>
+        <a href="index.html">Start</a>
+        <a href="co-robi-ai.html">Co robi AI?</a>
+        <a href="w-czym-pomaga.html">W czym pomaga?</a>
+        <a href="minigra.html" style="color: #4ade80;">Mini-Gra</a>
     </nav>
 
     <main>
-        <div class="gra-kontener">
-            <h2 style="color: var(--accent-blue); margin-bottom: 1rem;">🔐 Zgadnij Szyfr AI</h2>
-            <p style="margin-bottom: 1.5rem;">AI wygenerowało tajną liczbę od 1 do 50. Spróbuj ją odgadnąć!</p>
+        <div class="gra-box">
+            <h1 style="color: #38bdf8; margin-top: 0;">🤖 Awaria Reaktorów AI</h1>
+            <p>Klikaj w robota najszybciej jak potrafisz przez 10 sekund, aby go naładować!</p>
             
-            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 1rem;">
-                <input type="number" id="liczba-input" placeholder="Wpisz liczbę" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: white; width: 150px;">
-                <button class="tab-btn" onclick="sprawdzLiczbe()">Sprawdź ⚡</button>
+            <div id="bot" onclick="kliknijBota()">🤖</div>
+            
+            <div>
+                <button class="przycisk-gry" id="start-btn" onclick="startGry()">START GRY ⏱️</button>
             </div>
             
-            <p id="komunikat" class="wynik">Powodzenia w grze!</p>
+            <div id="wynik-tekst" class="wynik">Wynik: 0 kliknięć</div>
+            <div id="czas-tekst" style="margin-top: 10px; color: #94a3b8; font-size: 1.1rem;">Czas: 10s</div>
         </div>
     </main>
 
-    <footer>
-        <p>Portal o Sztucznej Inteligencji • PixelStorm 2026</p>
-    </footer>
-
     <script>
-        let tajnaLiczba = Math.floor(Math.random() * 50) + 1;
+        let klikniecia = 0;
+        let graTrwa = false;
+        let timer;
+        let timeLeft = 10;
 
-        function sprawdzLiczbe() {
-            const wpisana = parseInt(document.getElementById('liczba-input').value);
-            const komunikat = document.getElementById('komunikat');
+        function startGry() {
+            if (graTrwa) return;
+            
+            klikniecia = 0;
+            timeLeft = 10;
+            graTrwa = true;
+            
+            document.getElementById('wynik-tekst').innerHTML = "Wynik: 0 kliknięć";
+            document.getElementById('czas-tekst').innerHTML = `Czas: ${timeLeft}s`;
+            document.getElementById('start-btn').style.opacity = "0.5";
+            document.getElementById('start-btn').style.cursor = "not-allowed";
 
-            if (isNaN(wpisana)) {
-                komunikat.innerHTML = "⚠️ Najpierw wpisz liczbę!";
-                komunikat.style.color = "#f87171";
-                return;
-            }
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('czas-tekst').innerHTML = `Czas: ${timeLeft}s`;
 
-            if (wpisana === tajnaLiczba) {
-                komunikat.innerHTML = `🎉 Brawo! Trafiłeś idealnie, to była liczba ${tajnaLiczba}!`;
-                komunikat.style.color = "var(--accent-sage)";
-            } else if (wpisana < tajnaLiczba) {
-                komunikat.innerHTML = "📈 Za mało! Szukaj wyżej.";
-                komunikat.style.color = "var(--accent-blue)";
-            } else {
-                komunikat.innerHTML = "📉 Za dużo! Szukaj niżej.";
-                komunikat.style.color = "var(--accent-purple)";
-            }
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    graTrwa = false;
+                    document.getElementById('czas-tekst').innerHTML = "Koniec czasu! 🎉";
+                    document.getElementById('wynik-tekst').innerHTML = `Twój ostateczny wynik: ${klikniecia} pkt!`;
+                    document.getElementById('start-btn').style.opacity = "1";
+                    document.getElementById('start-btn').style.cursor = "pointer";
+                }
+            }, 1000);
+        }
+
+        function kliknijBota() {
+            if (!graTrwa) return;
+            klikniecia++;
+            document.getElementById('wynik-tekst').innerHTML = `Wynik: ${klikniecia} kliknięć`;
+            
+            // Efekt wzdrygnięcia bota
+            const botEl = document.getElementById('bot');
+            botEl.style.transform = "scale(1.2)";
+            setTimeout(() => {
+                botEl.style.transform = "scale(1)";
+            }, 100);
         }
     </script>
 </body>
