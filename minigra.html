@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyper-Drive Arcade – PixelStorm</title>
+    <title>Salon Gier AI – PixelStorm</title>
     <style>
         body {
             background-color: #0b0f19;
@@ -25,76 +25,68 @@
             margin: 0 15px;
             font-weight: bold;
         }
-        .gra-box {
+        .grid-gier {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .karta-gry {
             background: rgba(30, 41, 59, 0.85);
             border: 2px solid #38bdf8;
             border-radius: 16px;
-            max-width: 450px;
-            margin: 0 auto;
             padding: 1.5rem;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        /* Ekran gry, po którym porusza się statek */
         .plansza {
             background: #000000;
             border: 2px solid #0ea5e9;
             border-radius: 10px;
-            height: 250px;
+            height: 180px;
             position: relative;
             overflow: hidden;
             margin: 1rem 0;
         }
-        /* Twój statek */
-        #statek {
+        /* Elementy w grach */
+        .obiekt {
             position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2rem;
-            transition: left 0.05s linear;
-        }
-        /* Przeszkoda (wirus) */
-        #wirus {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
         }
         .sterowanie {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 1rem;
+            gap: 10px;
+            margin-bottom: 0.8rem;
         }
-        .btn-ster {
+        .btn {
             background: #38bdf8;
             color: #0b0f19;
             border: none;
-            padding: 12px 25px;
-            font-size: 1.2rem;
+            padding: 10px 20px;
+            font-size: 1rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
             user-select: none;
         }
-        .btn-ster:active {
+        .btn:active {
             background: #0ea5e9;
             transform: scale(0.95);
         }
         .btn-start {
             background: #4ade80;
-            color: #0b0f19;
-            border: none;
-            padding: 12px;
             width: 100%;
-            font-size: 1.1rem;
+            padding: 10px;
+            font-size: 1rem;
             font-weight: bold;
             border-radius: 8px;
+            border: none;
             cursor: pointer;
         }
         .wynik {
-            font-size: 1.3rem;
-            margin-top: 1rem;
+            font-size: 1.1rem;
+            margin-top: 0.8rem;
             color: #4ade80;
             font-weight: bold;
         }
@@ -106,99 +98,67 @@
         <a href="index.html">Start</a>
         <a href="co-robi-ai.html">Co robi AI?</a>
         <a href="w-czym-pomaga.html">W czym pomaga?</a>
-        <a href="minigra.html" style="color: #4ade80;">Mini-Gra</a>
+        <a href="minigra.html" style="color: #4ade80;">Salon Gier</a>
     </nav>
 
     <main>
-        <div class="gra-box">
-            <h1 style="color: #38bdf8; margin-top: 0; font-size: 1.5rem;">🚀 Hyper-Drive: Ucieczka z Sieci</h1>
-            <p style="font-size: 0.9rem; color: #94a3b8;">Używaj przycisków lewo/prawo, aby omijać spadające wirusy!</p>
+        <h1 style="color: #38bdf8; margin-bottom: 0.5rem;">🎮 Salon Gier Arcade</h1>
+        <p style="color: #94a3b8; margin-bottom: 2rem;">Wybierz grę, steruj przyciskami i pobijaj swoje rekordy!</p>
+
+        <div class="grid-gier">
             
-            <div class="plansza" id="plansza">
-                <div id="statek">🚀</div>
-                <div id="wirus">⚠️</div>
+            <!-- GRA 1: HYPER-DRIVE -->
+            <div class="karta-gry">
+                <h3 style="color: #38bdf8; margin-top: 0;">🚀 Hyper-Drive</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Omijaj spadające wirusy statkiem!</p>
+                
+                <div class="plansza" id="plansza-1">
+                    <div id="statek" class="obiekt" style="bottom: 10px; left: 50%;">🚀</div>
+                    <div id="wirus" class="obiekt" style="top: -30px; left: 50%;">⚠️</div>
+                </div>
+
+                <div class="sterowanie">
+                    <button class="btn" onclick="statekLewo()">◀</button>
+                    <button class="btn" onclick="statekPrawo()">▶</button>
+                </div>
+                <button class="btn-start" onclick="startHyper()">START GRY</button>
+                <div id="wynik-1" class="wynik">Wynik: 0 pkt</div>
             </div>
-            
-            <div class="sterowanie">
-                <button class="btn-ster" onclick="ruszLewo()">◀ LEWO</button>
-                <button class="btn-ster" onclick="ruszPrawo()">PRAWO ▶</button>
+
+            <!-- GRA 2: SZYBKI KLIKER -->
+            <div class="karta-gry">
+                <h3 style="color: #c084fc; margin-top: 0;">💥 Awaria Reaktora</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Klikaj w bota najszybciej przez 10s!</p>
+                
+                <div class="plansza" style="display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;" onclick="klikBot()">
+                    <div id="bot-emoji" style="font-size: 3rem;">🤖</div>
+                    <div id="reaktor-info" style="font-size: 0.85rem; color: #c084fc; margin-top: 5px;">Kliknij robota!</div>
+                </div>
+
+                <button class="btn-start" style="background: #c084fc;" onclick="startKlikera()">START (10s) ⏱️</button>
+                <div id="wynik-2" class="wynik" style="color: #c084fc;">Kliknięcia: 0</div>
             </div>
-            
-            <button class="btn-start" onclick="startGry()">START / RESET GRY 🎮</button>
-            
-            <div id="wynik" class="wynik">Wynik: 0 pkt</div>
+
+            <!-- GRA 3: ŁAPACZ KLUCZY -->
+            <div class="karta-gry">
+                <h3 style="color: #4ade80; margin-top: 0;">💎 Krypto-Klucze</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Łap spadające klucze koszykiem!</p>
+                
+                <div class="plansza" id="plansza-3">
+                    <div id="klucz" class="obiekt" style="top: -30px; left: 30%;">🔑</div>
+                    <div id="koszyk" class="obiekt" style="bottom: 5px; left: 40%; background: rgba(255,255,255,0.1); padding: 0 10px; border-radius: 6px;">🧺</div>
+                </div>
+
+                <div class="sterowanie">
+                    <button class="btn" onclick="koszykLewo()">◀</button>
+                    <button class="btn" onclick="koszykPrawo()">▶</button>
+                </div>
+                <button class="btn-start" onclick="startKrypto()">START GRY</button>
+                <div id="wynik-3" class="wynik">Klucze: 0 pkt</div>
+            </div>
+
         </div>
     </main>
 
     <script>
-        let statekX = 50; // Pozycja procentowa statku (od 0 do 100)
-        let wirusY = -40; // Pozycja pionowa wirusa
-        let wirusX = 50;  // Pozycja pozioma wirusa
-        let graAktywna = false;
-        let punkty = 0;
-        let silnikGry;
-
-        function ruszLewo() {
-            if (!graAktywna) return;
-            if (statekX > 10) {
-                statekX -= 10;
-                document.getElementById('statek').style.left = statekX + '%';
-            }
-        }
-
-        function ruszPrawo() {
-            if (!graAktywna) return;
-            if (statekX < 90) {
-                statekX += 10;
-                document.getElementById('statek').style.left = statekX + '%';
-            }
-        }
-
-        function startGry() {
-            graAktywna = true;
-            punkty = 0;
-            wirusY = -40;
-            statekX = 50;
-            document.getElementById('statek').style.left = statekX + '%';
-            document.getElementById('wynik').innerHTML = "Wynik: 0 pkt";
-            document.getElementById('wynik').style.color = "#4ade80";
-
-            // Losujemy pierwszą pozycję wirusa
-            wirusX = Math.floor(Math.random() * 80) + 10;
-            document.getElementById('wirus').style.left = wirusX + '%';
-
-            clearInterval(silnikGry);
-            silnikGry = setInterval(petlaGry, 30);
-        }
-
-        function petlaGry() {
-            if (!graAktywna) return;
-
-            // Wirus spada w dół
-            wirusY += 4;
-            document.getElementById('wirus').style.top = wirusY + 'px';
-
-            // Sprawdzamy czy wirus dotarł na dół ekranu
-            if (wirusY > 210) {
-                wirusY = -40;
-                wirusX = Math.floor(Math.random() * 80) + 10; // Nowa losowa kolumna
-                document.getElementById('wirus').style.left = wirusX + '%';
-                punkty += 10;
-                document.getElementById('wynik').innerHTML = `Wynik: ${punkty} pkt 🚀`;
-            }
-
-            // Sprawdzamy kolizję (czy statek dotknął wirusa)
-            // statekX i wirusX to pozycje w %, sprawdzamy czy są blisko siebie
-            if (wirusY > 160 && wirusY < 210) {
-                if (Math.abs(statekX - wirusX) < 12) {
-                    // Koniec gry!
-                    graAktywna = false;
-                    clearInterval(silnikGry);
-                    document.getElementById('wynik').innerHTML = `💥 ZDERZENIE! Wynik: ${punkty} pkt`;
-                    document.getElementById('wynik').style.color = "#f87171";
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+        /* --- GRA 1
