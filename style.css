@@ -548,3 +548,49 @@ body::after {
     border-color: var(--accent-blue);
     box-shadow: 0 15px 35px rgba(56, 189, 248, 0.15);
 }
+/* Efekt neonowej poświaty dla nagłówków po najechaniu */
+h1:hover, h2:hover {
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.3);
+    transition: text-shadow 0.3s ease;
+}
+
+/* Nowoczesne, gładkie paski przewijania (scrollbary) w stylu cyberpunk */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 5px;
+    border: 1px solid #38bdf8;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #38bdf8;
+/* Efekt neonowej poświaty dla nagłówków po najechaniu */
+h1:hover, h2:hover {
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.3);
+    transition: text-shadow 0.3s ease;
+}
+
+/* Nowoczesne, gładkie paski przewijania (scrollbary) w stylu cyberpunk */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 5px;
+    border: 1px solid #38bdf8;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #38bdf8;
+/* Efekt neonowej poświaty dla nagłówków po najechaniu */
+h1:hover, h2:hover {
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.3);
+    transition: text-shadow 0.3s ease;
+}
+
