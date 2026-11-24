@@ -1,225 +1,527 @@
-// Użycie: node patch_last_signal_city.js [ścieżka/do/last_signal_city_rescue_evolution.html]
-const fs = require('fs');
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta AI – Sztuczna Inteligencja Przyszłości</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #263349;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a78bfa;
+            --accent-sage: #6ee7b7;
+            --accent-beige: #f5f5dc;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
 
-const file = process.argv[2] || './last_signal_city_rescue_evolution.html';
-let s = fs.readFileSync(file, 'utf8');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
 
-// Zamienia wszystkie wystąpienia (jak str.replace w Pythonie) i ostrzega, gdy nic nie znaleziono.
-function rep(from, to) {
-  if (!s.includes(from)) {
-    console.warn('UWAGA: nie znaleziono fragmentu:\n  ' + from.slice(0, 90) + '...');
-    return;
-  }
-  s = s.split(from).join(to);
-}
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-rep(String.raw`#mapwrap{overflow:auto;background:#091522;max-height:78vh}canvas{display:block;width:auto;max-width:none;height:auto;cursor:crosshair}`,
-    String.raw`#mapwrap{overflow:auto;background:#07121d;max-height:78vh;min-height:480px;scrollbar-color:#42637c #0a1724}canvas{display:block;width:auto;max-width:none;height:auto;cursor:crosshair;image-rendering:auto}`);
+        /* Nawigacja */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-rep(String.raw`const bases=[{kind:'fire',name:'REMIZA STRAŻY',x:45,y:55},{kind:'police',name:'KOMISARIAT',x:45,y:285},{kind:'medical',name:'STACJA POGOTOWIA',x:45,y:515},{kind:'rescue',name:'BAZA RATOWNIKÓW',x:300,y:55}];`,
-    String.raw`const bases=[{kind:'fire',name:'REMIZA STRAŻY',x:35,y:35},{kind:'police',name:'KOMISARIAT',x:35,y:405},{kind:'medical',name:'STACJA POGOTOWIA',x:300,y:35},{kind:'rescue',name:'BAZA RATOWNIKÓW',x:300,y:405}];`);
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
 
-rep(String.raw`function size(){return{w:1600+(level-1)*260,h:1000+(level-1)*160}}`,
-    String.raw`function size(){return{w:2200+(level-1)*360,h:1450+(level-1)*220}}`);
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
 
-rep(String.raw`function initFleet(){vehicles=[newVehicle('fire','Błysk-01',bases[0].x+130,bases[0].y+55,3.1),newVehicle('police','Patrol-01',bases[1].x+130,bases[1].y+55,3.7),newVehicle('medical','Puls-01',bases[2].x+130,bases[2].y+55,3.4)]}`,
-    String.raw`function initFleet(){vehicles=[newVehicle('fire','Błysk-01',bases[0].x+78,bases[0].y+105,3.1),newVehicle('police','Patrol-01',bases[1].x+78,bases[1].y+105,3.7),newVehicle('medical','Puls-01',bases[2].x+78,bases[2].y+105,3.4)]}`);
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
 
-// stabilne pasy ruchu i więcej samochodów
-rep(String.raw`function setup(){let s=size();c.width=s.w;c.height=s.h;traffic=[];for(let i=0;i<Math.min(7,3+level);i++)traffic.push({x:220+i*125,y:174+(i%3)*180,dir:i%2?1:-1,v:1+Math.random()*1.3,color:['#b7c8d6','#e7bd75','#829caf'][i%3]})}`,
-    String.raw`function setup(){let s=size();c.width=s.w;c.height=s.h;traffic=[];let lanes=Math.max(3,Math.floor(s.h/180));for(let i=0;i<Math.min(34,12+level*3);i++){let lane=i%lanes,dir=i%2?1:-1;traffic.push({x:Math.random()*s.w,y:174+lane*180+(dir>0?10:-10),dir,v:42+Math.random()*48,color:['#b7c8d6','#e7bd75','#829caf','#657d91','#c1c9ce'][i%5],phase:Math.random()*6.28})}}`);
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
 
-// kupione jednostki startują z właściwych baz
-rep(String.raw`vehicles.push(newVehicle(a[0],a[1].split(' • ')[0],base.x+130,base.y+55,a[3],2))`,
-    String.raw`vehicles.push(newVehicle(a[0],a[1].split(' • ')[0],base.x+78,base.y+105,a[3],2))`);
+        /* Sekcja Hero */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+        }
 
-// zdarzenia w środkach kwartałów, wypadki na pasach
-rep(String.raw`function make(kind){if(incidents.some(i=>i.active))return incidents.find(i=>i.active);let s=size(),roadY=174+Math.floor(Math.random()*Math.max(1,Math.floor(s.h/180)))*180;let x=260+Math.random()*(s.w-320),y=kind==='crash'?roadY:Math.random()*(s.h-100)+50;if(kind==='crash')x=Math.round(x/30)*30;`,
-    String.raw`function make(kind){if(incidents.some(i=>i.active))return incidents.find(i=>i.active);let s=size(),lane=Math.floor(Math.random()*Math.max(1,Math.floor(s.h/180))),roadY=174+lane*180;let col=1+Math.floor(Math.random()*Math.max(1,Math.floor((s.w-300)/240))),row=Math.floor(Math.random()*Math.max(1,Math.floor(s.h/180)));let x=280+col*240+55+Math.random()*75,y=kind==='crash'?roadY:row*180+72+Math.random()*25;if(kind==='crash')x=Math.round(x/30)*30;`);
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(167, 139, 250, 0.05) 50%, transparent 70%);
+            top: 20%;
+            z-index: -1;
+            border-radius: 50%;
+        }
 
-// nowa, animowana funkcja draw()
-const draw = String.raw`let animTime=0;
-function rr(x,y,w,h,r,fill,stroke){g.beginPath();g.roundRect(x,y,w,h,r);if(fill){g.fillStyle=fill;g.fill()}if(stroke){g.strokeStyle=stroke;g.lineWidth=1.5;g.stroke()}}
-function draw(){
- const s=size(),t=animTime;
- g.clearRect(0,0,s.w,s.h);
- // Ground, subtle grid and city blocks.
- let bg=g.createLinearGradient(0,0,s.w,s.h);bg.addColorStop(0,'#263e43');bg.addColorStop(.55,'#1b343a');bg.addColorStop(1,'#122832');g.fillStyle=bg;g.fillRect(0,0,s.w,s.h);
- g.strokeStyle='rgba(178,211,190,.055)';g.lineWidth=1;
- for(let x=0;x<s.w;x+=40){g.beginPath();g.moveTo(x,0);g.lineTo(x,s.h);g.stroke()}
- for(let y=0;y<s.h;y+=40){g.beginPath();g.moveTo(0,y);g.lineTo(s.w,y);g.stroke()}
- // City blocks sit between roads; no building overlaps the carriageways.
- for(let row=0;row<Math.ceil(s.h/180);row++)for(let col=1;col<Math.ceil(s.w/240);col++){
-  let x=col*240+12,y=row*180+10,seed=(col*17+row*29)%11,park=seed===0||seed===6;
-  rr(x,y,214,126,10,park?'#376348':'#43545a','#61736d');
-  if(park){
-   rr(x+8,y+8,198,110,7,'#477b50');
-   g.strokeStyle='#c4b98c';g.lineWidth=7;g.beginPath();g.moveTo(x+25,y+95);g.quadraticCurveTo(x+100,y+15,x+190,y+88);g.stroke();
-   for(let k=0;k<10;k++){let tx=x+24+(k%5)*39,ty=y+24+Math.floor(k/5)*58;
-    g.fillStyle='#254a34';g.beginPath();g.arc(tx+3,ty+5,15,0,7);g.fill();
-    let leaf=g.createRadialGradient(tx-5,ty-7,2,tx,ty,16);leaf.addColorStop(0,'#8ab96b');leaf.addColorStop(1,k%2?'#347449':'#4e9253');g.fillStyle=leaf;g.beginPath();g.arc(tx,ty,14,0,7);g.fill();
-    g.fillStyle='#77583a';g.fillRect(tx-2,ty+9,4,9);
-   }
-   rr(x+82,y+47,45,15,7,'#b9b18b');
-  }else{
-   // Sidewalk courtyards, parking bays and landscaped edges.
-   rr(x+7,y+7,200,112,7,'#777f75');
-   rr(x+13,y+13,188,100,5,'#a1a08b');
-   for(let k=0;k<6;k++){g.strokeStyle='#e1dec4';g.lineWidth=1;g.beginPath();g.moveTo(x+15+k*30,y+91);g.lineTo(x+15+k*30,y+110);g.stroke()}
-   // Building A: cast shadow, walls, roof, windows and entrance.
-   let style=seed%4,bx=x+17,by=y+17,bw=91,bh=75;
-   rr(bx+6,by+7,bw,bh,3,'rgba(0,0,0,.35)');
-   let wall=['#c4a58a','#9aadb0','#b6b6a0','#8e9ba8'][style];
-   rr(bx,by,bw,bh,3,wall,'#e0d1b9');
-   g.fillStyle=['#795e50','#536c79','#737765','#586879'][style];
-   g.beginPath();g.moveTo(bx-5,by+5);g.lineTo(bx+bw/2,by-13);g.lineTo(bx+bw+5,by+5);g.closePath();g.fill();
-   g.fillStyle='#3b4b50';g.fillRect(bx+8,by+bh-18,bw-16,18);
-   for(let wy=by+13;wy<by+bh-22;wy+=19)for(let wx=bx+9;wx<bx+bw-7;wx+=19){
-    rr(wx,wy,11,12,1,((wx+wy+seed)%3===0)?'#ffe1a0':'#9ed0d8','#56676a');
-    g.fillStyle='rgba(255,255,255,.28)';g.fillRect(wx+2,wy+2,3,2);
-   }
-   g.fillStyle='#263b43';g.fillRect(bx+bw/2-7,by+bh-22,14,22);
-   g.fillStyle='#d6d4c3';g.fillRect(bx+12,by-4,20,5);g.fillRect(bx+bw-26,by-7,14,8);
-   // Building B: shop/office facade.
-   let qx=x+119,qy=y+27;
-   rr(qx+4,qy+5,72,69,3,'rgba(0,0,0,.28)');
-   rr(qx,qy,72,69,3,['#a5b8b5','#c6a17d','#879eaa'][style%3],'#d7d0b8');
-   g.fillStyle='#536d76';g.fillRect(qx+6,qy+8,60,20);
-   g.fillStyle='#b8dce0';g.fillRect(qx+10,qy+12,52,13);
-   for(let wx=qx+9;wx<qx+67;wx+=19){g.fillStyle='#d8e7d8';g.fillRect(wx,qy+35,13,18)}
-   g.fillStyle='#35454b';g.fillRect(qx+28,qy+49,16,20);
-   // Courtyard trees and lamp posts.
-   for(let k=0;k<3;k++){let tx=x+22+k*79,ty=y+108;g.fillStyle='#73583c';g.fillRect(tx-2,ty-2,4,10);g.fillStyle='#4f9255';g.beginPath();g.arc(tx,ty-5,8,0,7);g.fill()}
-  }
- }
- // Asphalt road grid with sidewalks, lane dividers, zebra crossings and junction markings.
- for(let y=150;y<s.h;y+=180){
-  g.fillStyle='#8e9a8c';g.fillRect(0,y-5,s.w,58);
-  g.fillStyle='#303d46';g.fillRect(0,y,s.w,48);
-  g.fillStyle='#26343c';g.fillRect(0,y+4,s.w,40);
-  g.strokeStyle='#e9dca0';g.lineWidth=2;g.setLineDash([24,18]);g.beginPath();g.moveTo(0,y+24);g.lineTo(s.w,y+24);g.stroke();g.setLineDash([]);
-  for(let x=18;x<s.w;x+=240){g.fillStyle='#e8e8d8';for(let k=0;k<6;k++)g.fillRect(x+k*7,y+3,4,9)}
- }
- for(let x=210;x<s.w;x+=240){
-  g.fillStyle='#8e9a8c';g.fillRect(x-5,0,58,s.h);
-  g.fillStyle='#303d46';g.fillRect(x,0,48,s.h);
-  g.fillStyle='#26343c';g.fillRect(x+4,0,40,s.h);
-  g.strokeStyle='#e9dca0';g.lineWidth=2;g.setLineDash([24,18]);g.beginPath();g.moveTo(x+24,0);g.lineTo(x+24,s.h);g.stroke();g.setLineDash([]);
-  for(let y=18;y<s.h;y+=180){g.fillStyle='#e8e8d8';for(let k=0;k<6;k++)g.fillRect(x+3,y+k*7,9,4)}
- }
- // Junction zebra crossings and traffic islands.
- for(let y=150;y<s.h;y+=180)for(let x=210;x<s.w;x+=240){
-  g.fillStyle='#d8ded5';for(let k=0;k<6;k++){g.fillRect(x-3+k*8,y+2,4,12);g.fillRect(x-3+k*8,y+34,4,12)}
-  rr(x+8,y+17,8,14,3,'#67757a');rr(x+32,y+17,8,14,3,'#67757a');
- }
- // Station campuses are in large courtyards away from roads.
- bases.forEach((b,idx)=>{
-  rr(b.x-12,b.y-10,184,150,9,'#a7a18a','#d2cbb0');
-  rr(b.x-6,b.y-4,172,138,7,'#777f72','#c7c4a9');
-  // parking spaces and a green strip
-  for(let k=0;k<4;k++){g.strokeStyle='#e4e1c8';g.lineWidth=1;g.strokeRect(b.x+8+k*35,b.y+104,29,22)}
-  g.fillStyle='#477b4d';g.fillRect(b.x+7,b.y+94,148,8);
-  for(let k=0;k<4;k++){g.fillStyle='#765a3c';g.fillRect(b.x+14+k*40,b.y+87,3,10);g.fillStyle='#5b9a5b';g.beginPath();g.arc(b.x+15+k*40,b.y+86,7,0,7);g.fill()}
-  // station building and coloured roof band
-  rr(b.x+8,b.y+8,144,75,5,'#253b4a','#d5d2c3');
-  g.fillStyle=T[b.kind].color;g.beginPath();g.moveTo(b.x+3,b.y+14);g.lineTo(b.x+80,b.y-2);g.lineTo(b.x+157,b.y+14);g.closePath();g.fill();
-  g.fillStyle='#d3e2e1';g.fillRect(b.x+18,b.y+28,34,24);g.fillRect(b.x+61,b.y+28,34,24);
-  g.fillStyle='#1a2a34';g.fillRect(b.x+110,b.y+25,29,58);
-  g.fillStyle='#9bc8d1';g.fillRect(b.x+114,b.y+31,21,18);
-  g.fillStyle='#fff';g.font='bold 10px system-ui';g.textAlign='left';g.fillText(b.name,b.x+12,b.y+22);
-  g.fillStyle=T[b.kind].color;g.fillRect(b.x+115,b.y+57,19,4);
- });
- // Moving civilian traffic (movement updated by animation loop, not by drawing).
- traffic.forEach((car)=>{
-  g.save();g.translate(car.x,car.y);if(car.dir<0)g.scale(-1,1);
-  g.fillStyle='rgba(0,0,0,.35)';g.beginPath();g.ellipse(1,8,19,8,0,0,7);g.fill();
-  rr(-17,-8,35,17,5,'#111820');
-  rr(-16,-10,32,16,5,car.color,'#d2dce0');
-  rr(-7,-8,14,7,2,'#b9dce2','#526c77');
-  g.fillStyle='#f8e8ac';g.fillRect(13,-5,3,4);g.fillStyle='#e88c82';g.fillRect(-16,-5,3,4);
-  g.fillStyle='#111820';g.beginPath();g.arc(-10,7,4,0,7);g.arc(10,7,4,0,7);g.fill();
-  g.restore();
- });
- // Animated incident markers.
- incidents.filter(i=>i.active).forEach(i=>{
-  g.save();g.translate(i.x,i.y);
-  if(i.kind==='fire'){
-   // burning facade with flickering flame tongues and drifting smoke
-   rr(-25,-14,50,34,3,'#8c4b38','#e4bd87');
-   g.fillStyle='#263c45';g.fillRect(-17,-7,11,12);g.fillRect(5,-7,11,12);
-   g.fillStyle='#ffd98b';g.fillRect(-15,-5,7,8);g.fillRect(7,-5,7,8);
-   for(let k=0;k<4;k++){let pulse=.75+.25*Math.sin(t*8+k*1.8);g.save();g.translate(-13+k*9,-15);g.scale(pulse,1+pulse*.35);
-    g.fillStyle=k%2?'#ff7b32':'#ffc04e';g.beginPath();g.moveTo(-5,7);g.quadraticCurveTo(-10,-5,-2,-15);g.quadraticCurveTo(0,-7,3,-19);g.quadraticCurveTo(11,-5,5,8);g.closePath();g.fill();
-    g.fillStyle='#fff0a3';g.beginPath();g.moveTo(-2,6);g.quadraticCurveTo(-4,-3,1,-9);g.quadraticCurveTo(6,-2,3,6);g.fill();g.restore()}
-   for(let k=0;k<4;k++){let rise=(t*18+k*17)%58;g.globalAlpha=.3*(1-rise/70);g.fillStyle='#9ba8a9';g.beginPath();g.arc(-13+k*9+Math.sin(t*2+k)*5,-27-rise,5+rise*.12,0,7);g.fill()}
-  }else if(i.kind==='crash'){
-   g.save();g.rotate(-.18);
-   [[-22,-3,'#dca34e'],[5,4,'#9fb9c6']].forEach(a=>{rr(a[0]-2,a[1]-9,31,19,5,'#111820');rr(a[0],a[1]-8,27,15,4,a[2],'#d6e1e1');rr(a[0]+7,a[1]-7,11,6,2,'#cce9ee');g.fillStyle='#101820';g.beginPath();g.arc(a[0]+5,a[1]+8,4,0,7);g.arc(a[0]+22,a[1]+8,4,0,7);g.fill()});
-   g.restore();
-   for(let k=0;k<5;k++){let ang=t*4+k*1.25;g.strokeStyle='#ffc45b';g.lineWidth=2;g.beginPath();g.moveTo(Math.cos(ang)*8,Math.sin(ang)*8);g.lineTo(Math.cos(ang)*18,Math.sin(ang)*18);g.stroke()}
-   g.fillStyle='#ff554c';g.globalAlpha=.45+.5*Math.sin(t*9);g.beginPath();g.arc(-28,-15,4,0,7);g.fill();g.globalAlpha=1;
-  }else if(i.kind==='medical'){
-   rr(-18,-13,36,26,5,'#f4f1e8','#d8e6e8');g.fillStyle='#d94d69';g.fillRect(-4,-10,8,20);g.fillRect(-11,-4,22,8);
-  }else if(i.kind==='rescue'){
-   g.fillStyle='#a66f43';g.fillRect(-3,-20,6,40);g.fillStyle='#367b4d';g.beginPath();g.arc(0,-23,17,0,7);g.fill();g.fillStyle='#d5a66e';g.beginPath();g.arc(7,-34,6,0,7);g.fill();g.font='16px sans-serif';g.fillText('🐈',-10,-22);
-  }else if(i.kind==='power'){
-   g.strokeStyle='#e7d27a';g.lineWidth=3;g.beginPath();g.moveTo(-18,-20);g.lineTo(0,15);g.lineTo(18,-20);g.stroke();g.fillStyle='#fff2a8';g.font='20px sans-serif';g.fillText('⚡',-8,-3);
-  }else if(i.kind==='flood'){
-   g.fillStyle='#398ec0';g.beginPath();g.ellipse(0,5,25,13,0,0,7);g.fill();g.strokeStyle='#b5eaff';g.lineWidth=2;g.beginPath();g.moveTo(-17,3+Math.sin(t*3)*2);g.quadraticCurveTo(-7,-3,2,3);g.quadraticCurveTo(12,9,19,2);g.stroke();
-  }else{
-   g.fillStyle='#f0c76b';g.beginPath();g.arc(0,-8,7,0,7);g.fill();g.fillStyle='#4c9bd0';g.fillRect(-7,0,14,17);g.fillStyle='#fff';g.font='14px sans-serif';g.fillText('?',-4,9);
-  }
-  // pulsing locator ring and readable title
-  let pulse=1+Math.sin(t*3)*.08;g.strokeStyle='#fff1b7';g.lineWidth=2;g.beginPath();g.arc(0,0,30*pulse,0,7);g.stroke();
-  g.fillStyle='rgba(7,17,28,.9)';g.beginPath();g.roundRect(-66,39,132,19,6);g.fill();
-  g.fillStyle='#fff';g.font='bold 11px system-ui';g.textAlign='center';g.fillText(i.title,0,53);
-  if(target===i){g.strokeStyle='#65dcff';g.lineWidth=3;g.beginPath();g.arc(0,0,38,0,7);g.stroke()}
-  g.restore();
- });
- // Emergency fleet with body shape, windows, service stripes, wheels and animated lightbars.
- vehicles.forEach(v=>{
-  g.save();g.translate(v.x,v.y);
-  g.fillStyle='rgba(0,0,0,.42)';g.beginPath();g.ellipse(0,10,25,10,0,0,7);g.fill();
-  rr(-22,-12,44,25,6,'#0b1118');
-  let body=v.kind==='fire'?'#df4936':v.kind==='police'?'#e8edf0':v.kind==='medical'?'#f4f1e8':'#4c9b70';
-  rr(-20,-11,40,21,5,body,'#f4f7ef');
-  rr(-8,-9,15,9,2,'#9bcbd7','#e6f4f4');rr(8,-8,7,8,2,'#cde8ec');
-  if(v.kind==='police'){g.fillStyle='#2766a4';g.fillRect(-19,-2,38,5)}
-  else if(v.kind==='fire'){g.fillStyle='#f7d36b';g.fillRect(-18,-2,36,4)}
-  else if(v.kind==='medical'){g.fillStyle='#d94d5f';g.fillRect(-18,-2,36,4);g.fillStyle='#fff';g.fillRect(-2,-8,4,14);g.fillRect(-7,-3,14,4)}
-  else{g.fillStyle='#d7e8d6';g.fillRect(-17,-2,34,4)}
-  g.fillStyle='#0b1118';g.beginPath();g.arc(-12,10,5,0,7);g.arc(12,10,5,0,7);g.fill();
-  g.fillStyle='#d7e4e9';g.fillRect(16,-6,3,4);g.fillRect(-19,-6,3,4);
-  if(v.status==='W drodze'){g.fillStyle=(Math.floor(t*7)%2)?'#ff514c':'#4ba4ff';g.fillRect(-5,-16,10,4)}
-  if(v.id===selected){g.strokeStyle='#fff';g.lineWidth=2;g.beginPath();g.arc(0,0,29,0,7);g.stroke()}
-  g.restore();
- });
- // Map title and compass-like district marker.
- g.fillStyle='rgba(5,14,22,.8)';rr(14,12,220,34,8,'rgba(5,14,22,.8)','#527080');
- g.fillStyle='#eaf5ff';g.font='bold 13px system-ui';g.textAlign='left';g.fillText('NEO-KRAKÓW  •  SEKTOR '+level,26,34);
-}
-function animate(now){if(!animate.last)animate.last=now;let dt=Math.min(.05,(now-animate.last)/1000);animate.last=now;animTime+=dt;traffic.forEach(car=>{car.x+=car.dir*car.v*dt;if(car.dir>0&&car.x>c.width+35)car.x=-35;if(car.dir<0&&car.x< -35)car.x=c.width+35});draw();requestAnimationFrame(animate)}
-`;
+        .badge {
+            background: rgba(110, 231, 183, 0.1);
+            color: var(--accent-sage);
+            border: 1px solid rgba(110, 231, 183, 0.25);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
 
-const a = s.indexOf('function draw(){');
-const b = a === -1 ? -1 : s.indexOf('function showCall(){', a);
-if (a === -1 || b === -1) {
-  console.error('BŁĄD: nie znaleziono function draw(){ ... function showCall(){ w pliku. Przerywam bez zapisu.');
-  process.exit(1);
-}
-s = s.slice(0, a) + draw + s.slice(b);
+        .hero h1 {
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            max-width: 800px;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
 
-// stary losowy spawn ruchu w tick() – teraz ruchem zarządza pętla animacji
-rep(String.raw`if(Math.random()<0.035){let z=size();traffic.push({x:-25,y:174+Math.floor(Math.random()*(z.h/180))*180,dir:1,v:1+Math.random()*1.3,color:'#bdcbd7'});if(traffic.length>22)traffic.shift()}`, '');
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-// start animacji
-rep('update();showCall();draw();setInterval(tick,1000)}',
-    'update();showCall();draw();setInterval(tick,1000);requestAnimationFrame(animate)}');
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            max-width: 620px;
+            margin-bottom: 2.5rem;
+        }
 
-// teksty
-rep('MAPA MIASTA • RUCH ULICZNY', 'MAPA MIASTA • RUCH ULICZNY • ANIMACJE');
-rep('Po dojeździe wybierz „Wykonaj akcję”, aby otrzymać punkty i kolejne zgłoszenie.',
-    'Mapa jest większa — przewijaj ją w poziomie i pionie. Ruch uliczny i zdarzenia są animowane. Po dojeździe wybierz „Wykonaj akcję”.');
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-fs.writeFileSync(file, s, 'utf8');
-console.log('updated', s.length);
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.35);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+        }
+
+        /* Sekcje ogólne */
+        section {
+            padding: 5rem 8%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Co to jest Meta AI */
+        .about-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--accent-beige);
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .stat-item {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-item h4 {
+            font-size: 1.8rem;
+            color: var(--accent-sage);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-item span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Siatka korzyści */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(167, 139, 250, 0.4);
+        }
+
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(56, 189, 248, 0.12);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Gdzie działa */
+        .platforms {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .platform-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1.6rem;
+            border-radius: 50px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-sage);
+        }
+
+        /* Interaktywny przykład */
+        .demo-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .demo-btn:hover, .demo-btn.active {
+            background: var(--accent-purple);
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .demo-output {
+            background: #0f172a;
+            padding: 1.5rem;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            min-height: 110px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Stopka */
+        footer {
+            text-align: center;
+            padding: 3rem 5%;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+
+        /* Responsywność */
+        @media (max-width: 850px) {
+            .about-box {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Meta AI</div>
+        <ul class="nav-links">
+            <li><a href="#co-to-jest">Co to jest?</a></li>
+            <li><a href="#korzysci">Korzyści</a></li>
+            <li><a href="#zastosowania">Zastosowania</a></li>
+            <li><a href="#demo">Przykłady</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <span class="badge">Napędzane przez model Llama</span>
+        <h1>Poznaj <span>Meta AI</span> – inteligentnego asystenta nowej generacji</h1>
+        <p>Zaawansowana sztuczna inteligencja zintegrowana z aplikacjami, z których korzystasz każdego dnia. Twórz grafiki, pisz teksty, ucz się i rozwiązuj problemy w kilka sekund.</p>
+        <div class="btn-group">
+            <a href="#co-to-jest" class="btn-primary">Dowiedz się więcej</a>
+            <a href="#demo" class="btn-secondary">Zobacz jak działa</a>
+        </div>
+    </header>
+
+    <section id="co-to-jest">
+        <div class="about-box">
+            <div class="about-text">
+                <h3>Czym właściwie jest Meta AI?</h3>
+                <p><strong>Meta AI</strong> to darmowy, inteligentny asystent stworzony przez firmę Meta (właściciela Facebooka, Instagrama i WhatsAppa). Działa w oparciu o autorskie, otwarte modele językowe z rodziny <strong>Llama</strong>.</p>
+                <p>W przeciwieństwie do zwykłych wyszukiwarek, Meta AI rozumie kontekst rozmowy, potrafi generować obrazy w czasie rzeczywistym, pomagać w nauce oraz podsuwać pomysły bezpośrednio w oknie czatu ze znajomymi.</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4>24/7</h4>
+                    <span>Dostępność bez opłat</span>
+                </div>
+                <div class="stat-item">
+                    <h4>Llama</h4>
+                    <span>Nowoczesny silnik AI</span>
+                </div>
+                <div class="stat-item">
+                    <h4>4+</h4>
+                    <span>Główne aplikacje Meta</span>
+                </div>
+                <div class="stat-item">
+                    <h4>Obrazy</h4>
+                    <span>Generowanie na żywo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="korzysci">
+        <div class="section-header">
+            <h2>Najważniejsze korzyści</h2>
+            <p>Dlaczego miliony użytkowników na całym świecie korzystają z asystenta Meta AI w codziennych zadaniach?</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="icon-box">⚡</div>
+                <h3>Błyskawiczne odpowiedzi</h3>
+                <p>Uzyskaj natychmiastowe wyjaśnienia trudnych tematów, streszczenia artykułów oraz odpowiedzi na pytania z dostępem do aktualnych informacji z sieci.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box">🎨</div>
+                <h3>Tworzenie grafik (Imagine)</h3>
+                <p>Wpisz krótki opis, a sztuczna inteligencja wygeneruje unikalną ilustrację, logo lub grafikę koncepcyjną w zaledwie kilka sekund.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box">💬</div>
+                <h3>Wbudowane w Twoje aplikacje</h3>
+                <p>Nie musisz instalować dodatkowych programów. Asystent działa bezpośrednio na Messengerze, WhatsAppie, Instagramie oraz przez przeglądarkę.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box">📚</div>
+                <h3>Wsparcie w nauce i pracy</h3>
+                <p>Pomoc w pisaniu kodu, tłumaczeniu języków obcych, tworzeniu planów nauki oraz przygotowywaniu prezentacji i projektów.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box">🔓</div>
+                <h3>Otwarty ekosystem (Open Source)</h3>
+                <p>Modele Llama są udostępniane społeczności programistów, co przyspiesza rozwój bezpiecznej i nowoczesnej technologii na całym świecie.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box">💡</div>
+                <h3>Kreatywna burza mózgów</h3>
+                <p>Brak pomysłu na post, prezent lub nazwę projektu? Meta AI wygeneruje dziesiątki dopasowanych propozycji w kilka chwil.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="zastosowania">
+        <div class="section-header">
+            <h2>Gdzie możesz korzystać z Meta AI?</h2>
+            <p>Asystent towarzyszy Ci tam, gdzie już rozmawiasz i tworzysz treści.</p>
+        </div>
+        <div class="platforms">
+            <div class="platform-pill"><span class="dot"></span> Messenger</div>
+            <div class="platform-pill"><span class="dot"></span> Instagram</div>
+            <div class="platform-pill"><span class="dot"></span> WhatsApp</div>
+            <div class="platform-pill"><span class="dot"></span> Facebook</div>
+            <div class="platform-pill"><span class="dot"></span> meta.ai (WWW)</div>
+            <div class="platform-pill"><span class="dot"></span> Okulary Ray-Ban Meta</div>
+        </div>
+    </section>
+
+    <section id="demo">
+        <div class="section-header">
+            <h2>Przykłady użycia</h2>
+            <p>Kliknij wybrane zadanie poniżej, aby zobaczyć, jak Meta AI odpowiada na polecenia.</p>
+        </div>
+
+        <div class="demo-box">
+            <div class="demo-buttons">
+                <button class="demo-btn active" onclick="showDemo(0, this)">Nauka i wyjaśnienia</button>
+                <button class="demo-btn" onclick="showDemo(1, this)">Generowanie grafiki</button>
+                <button class="demo-btn" onclick="showDemo(2, this)">Planowanie dnia</button>
+            </div>
+            <div class="demo-output" id="demo-text">
+                <strong>Polecenie:</strong> „Wytłumacz prostymi słowami, jak działa sieć neuronowa.”<br><br>
+                <strong>Meta AI:</strong> Wyobraź sobie sieć neuronową jak zespół uczniów rozwiązujących zagadkę. Pierwsza grupa patrzy na fragmenty obrazka (np. krawędzie), przekazuje wnioski dalej, a ostatnia osoba łączy wszystko w całość i mówi: „To jest kot!”. Im więcej przykładów przećwiczą, tym rzadziej się mylą.
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Strona informacyjna o technologii Meta AI • Gotowa do publikacji na GitHub Pages</p>
+    </footer>
+
+    <script>
+        const demos = [
+            `<strong>Polecenie:</strong> „Wytłumacz prostymi słowami, jak działa sieć neuronowa.”<br><br><strong>Meta AI:</strong> Wyobraź sobie sieć neuronową jak zespół uczniów rozwiązujących zagadkę. Pierwsza grupa patrzy na fragmenty obrazka (np. krawędzie), przekazuje wnioski dalej, a ostatnia osoba łączy wszystko w całość i mówi: „To jest kot!”. Im więcej przykładów przećwiczą, tym rzadziej się mylą.`,
+            `<strong>Polecenie:</strong> „/imagine futurystyczne miasto z zielonymi parkami o zachodzie słońca, styl minimalistyczny”<br><br><strong>Meta AI:</strong> ✨ <em>Wygenerowano 4 propozycje grafik w wysokiej rozdzielczości przedstawiające nowoczesną architekturę połączoną z naturą w ciepłych barwach zachodu słońca.</em>`,
+            `<strong>Polecenie:</strong> „Ułóż 2-godzinny plan nauki przed sprawdzianem z informatyki.”<br><br><strong>Meta AI:</strong> 16:00–16:40: Powtórka teorii i notatek. 16:40–16:50: Krótka przerwa bez ekranu. 16:50–17:40: Praktyczne zadania i pisanie kodu. 17:40–18:00: Szybki test sprawdzający wiedzę.`
+        ];
+
+        function showDemo(index, btn) {
+            document.getElementById('demo-text').innerHTML = demos[index];
+            document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
