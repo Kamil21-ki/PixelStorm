@@ -323,3 +323,135 @@ footer {
 @media (max-width: 768px) {
     .nav-links { display: none; }
 }
+/* === CIĄGŁE PORUSZAJĄCE SIĘ ELEMENTY (ORBY W TLE) === */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.45;
+}
+
+.orb-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--accent-blue);
+    top: 15%;
+    left: 10%;
+    animation: plywaj1 10s ease-in-out infinite alternate;
+}
+
+.orb-2 {
+    width: 280px;
+    height: 280px;
+    background: var(--accent-purple);
+    bottom: 10%;
+    right: 10%;
+    animation: plywaj2 12s ease-in-out infinite alternate;
+}
+
+@keyframes plywaj1 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(80px, 60px) scale(1.2); }
+}
+
+@keyframes plywaj2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-90px, -50px) scale(1.15); }
+}
+
+/* Ciągłe delikatne unoszenie ikon w kartach */
+.card h3 {
+    display: inline-block;
+    animation: unoszenieIkony 3s ease-in-out infinite alternate;
+}
+
+@keyframes unoszenieIkony {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-4px); }
+}
+
+/* === STYLE DO MINI-GIER === */
+.games-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.game-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.game-question {
+    font-size: 1.15rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.game-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.tab-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+
+.tab-btn:hover {
+    background: var(--accent-blue);
+    color: #090d16;
+    font-weight: 600;
+    transform: scale(1.02);
+}
+
+.game-result {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    min-height: 28px;
+}
+
+/* Pole drugiej gry (Łapanie neuronów) */
+.arena-gry {
+    position: relative;
+    height: 220px;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.cel-neuron {
+    position: absolute;
+    font-size: 2rem;
+    cursor: pointer;
+    user-select: none;
+    transition: top 0.4s ease, left 0.4s ease;
+    animation: obracajNeuron 4s linear infinite;
+}
+
+@keyframes obracajNeuron {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
