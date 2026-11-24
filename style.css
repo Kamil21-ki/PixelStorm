@@ -455,3 +455,83 @@ footer {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+/* === NOWE CIĄGLE PORUSZAJĄCE SIĘ ELEMENTY W TLE === */
+
+/* Cyfrowa siatka (neonowy grid poruszający się w tle) */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(192, 132, 252, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -2;
+    animation: przesuwaniesiatki 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes przesuwaniesiatki {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 40px; }
+}
+
+/* Dodatkowa trzecia kula poruszająca się po przekątnej */
+.orb-3 {
+    width: 350px;
+    height: 350px;
+    background: #0284c7;
+    top: 40%;
+    right: 20%;
+    animation: lewitacjaOrb 15s ease-in-out infinite alternate;
+}
+
+@keyframes lewitacjaOrb {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate(-100px, 80px) scale(1.1) rotate(180deg); }
+    100% { transform: translate(70px, -90px) scale(0.95) rotate(360deg); }
+}
+
+/* Ciągłe powolne kołysanie (lewitowanie) wszystkich kart na stronie */
+.card {
+    animation: lewitujKarty 6s ease-in-out infinite alternate;
+}
+
+/* Unikalne opóźnienia, żeby karty ruszały się niezależnie od siebie */
+.card:nth-child(2) { animation-delay: 1.5s; }
+.card:nth-child(3) { animation-delay: 3s; }
+.card:nth-child(4) { animation-delay: 4.5s; }
+
+@keyframes lewitujKarty {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-8px); }
+}
+
+
+/* === STYLE DLA TRZECIEJ MINI-GRY (SZYFR AI) === */
+.szyfr-box {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 1.2rem 0;
+}
+
+.szyfr-input {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    width: 140px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.szyfr-input:focus {
+    border-color: var(--accent-blue);
+}
